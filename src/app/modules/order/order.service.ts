@@ -1,11 +1,12 @@
 import { Product } from "../product/product.model";
+import { ProductServices } from "../product/product.service";
 import { TOrder } from "./order.interface";
 import { Order } from "./order.model";
 
 const orderProductIntoDB = async (orderData: TOrder) => {
-    const { product, quantity } = orderData;
+    const { product: productId, quantity, totalPrice } = orderData;
 
-    const productInDB = await Product.findById(product);
+    const productInDB = await ProductServices.getSingleProductFromDB(productId);
 
     if (!productInDB) {
         throw new Error("Product not found");
@@ -15,22 +16,29 @@ const orderProductIntoDB = async (orderData: TOrder) => {
         throw new Error("Insufficient stock available");
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(product, {
-        $inc: { quantity: -quantity },
-        $set: {
-            inStock:
-                productInDB.quantity - quantity <= 0
-                    ? false
-                    : productInDB.inStock,
-        },
-    });
+    // Checks if order totalPrice is correct
+    if (totalPrice > productInDB.price * quantity) {
+        throw new Error(
+            "The total price provided exceeds the calculated price for this order"
+        );
+    } else if (totalPrice !== productInDB.price * quantity) {
+        throw new Error(
+            "The total price provided is insufficient for this order"
+        );
+    }
+
+    const updatedProduct = await ProductServices.updateProductAfterOrderFromDB(
+        productId,
+        quantity,
+        productInDB
+    );
 
     if (!updatedProduct) {
-        throw new Error("Error updating product stock")
+        throw new Error("Error updating product stock");
     }
 
     const result = await Order.create(orderData);
-    
+
     return result;
 };
 

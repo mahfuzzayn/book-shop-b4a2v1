@@ -40,6 +40,24 @@ const updateProductFromDB = async (
     return result;
 };
 
+const updateProductAfterOrderFromDB = async (
+    id: string,
+    quantity: number,
+    productInDB: TProduct
+) => {
+    const result = await Product.findByIdAndUpdate(id, {
+        $inc: { quantity: -quantity },
+        $set: {
+            inStock:
+                productInDB.quantity - quantity <= 0
+                    ? false
+                    : productInDB.inStock,
+        },
+    });
+
+    return result;
+};
+
 const deleteProductFromDB = async (id: string) => {
     const result = await Product.deleteOne({ _id: id });
     return result;
@@ -50,5 +68,6 @@ export const ProductServices = {
     getAllProductsFromDB,
     getSingleProductFromDB,
     updateProductFromDB,
+    updateProductAfterOrderFromDB,
     deleteProductFromDB,
 };

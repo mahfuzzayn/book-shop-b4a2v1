@@ -9,9 +9,9 @@ const productSchema = new Schema<TProduct>(
             required: [true, "Title is required"],
             validate: {
                 validator: (value: string) => {
-                    return validator.isAlphanumeric(value);
+                    return /^[a-zA-Z0-9\s.:'-]+$/.test(value);
                 },
-                message: "{VALUE} should only contain alphanumeric characters",
+                message: "{VALUE} --- should only contain alphabetic characters, numbers and spaces",
             },
         },
         author: {
@@ -19,9 +19,9 @@ const productSchema = new Schema<TProduct>(
             required: [true, "Author is required"],
             validate: {
                 validator: (value: string) => {
-                    return validator.isAlpha(value);
+                    return /^[a-zA-ZÀ-ÿ\s,.'!-]+$/.test(value);
                 },
-                message: "{VALUE} should only contain alpha characters",
+                message: "{VALUE} --- should only contain alphabetic characters and spaces",
             },
         },
         price: {
@@ -29,7 +29,7 @@ const productSchema = new Schema<TProduct>(
             required: [true, "Price of the Product (Book) is required"],
             validate: {
                 validator: (value: number) => value > 0,
-                message: "{VALUE} should only contain positive number",
+                message: "{VALUE} --- should only contain positive number",
             },
         },
         category: {
@@ -46,19 +46,25 @@ const productSchema = new Schema<TProduct>(
                 validator: (value: string) => {
                     return validator.isAlpha(value);
                 },
-                message: "{VALUE} should only contain alpha characters",
+                message: "{VALUE} --- should only contain alphabetic characters",
             },
         },
         description: {
             type: String,
             required: [true, "Description of the Product (Book) is required"],
+            validate: {
+                validator: (value: string) => {
+                    return /^[a-zA-ZÀ-ÿ0-9\s,.'’!-():-]+$/.test(value);
+                }, 
+                message: "{VALUE} --- should only contain alphabets, numbers, spaces, commas, periods, exclamation points, and other common punctuation",
+            },
         },
         quantity: {
             type: Number,
             required: [true, "Quantity of the Product (Book) is required"],
             validate: {
                 validator: (value: number) => value > 0,
-                message: "{VALUE} should only contain positive number",
+                message: "{VALUE} --- should only contain positive number",
             },
         },
         inStock: {

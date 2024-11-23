@@ -6,6 +6,18 @@ const createProductIntoDB = async (productData: TProduct) => {
     return result;
 };
 
+const getAllProductsFromDB = async (searchTerm: any) => {
+    const result = await Product.find({
+        $or: [
+            { title: { $regex: searchTerm, $options: "i"}},
+            { author: { $regex: searchTerm, $options: "i"}},
+            { category: { $regex: searchTerm, $options: "i"}}
+        ]
+    });
+    return result;
+};
+
 export const ProductServices = {
     createProductIntoDB,
+    getAllProductsFromDB,
 };

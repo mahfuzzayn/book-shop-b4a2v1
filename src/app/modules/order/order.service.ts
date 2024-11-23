@@ -15,8 +15,7 @@ const orderProductIntoDB = async (orderData: TOrder) => {
     if (productInDB.quantity < quantity) {
         throw new Error("Insufficient stock available");
     }
-
-    // Checks if order totalPrice is correct
+    
     if (totalPrice > productInDB.price * quantity) {
         throw new Error(
             "The total price provided exceeds the calculated price for this order"
@@ -42,6 +41,49 @@ const orderProductIntoDB = async (orderData: TOrder) => {
     return result;
 };
 
+const generateOrdersRevenueFromDB = async () => {
+    const result = await Order.aggregate([
+        {
+            $addFields: {
+                productObjectId: { $toObjectId: "$product" },
+            },
+        },
+        {
+            $lookup: {
+                from: "products",
+                localField: "productObjectId",
+                foreignField: "_id",
+                as: "productDetails",
+            },
+        },
+        {
+            $unwind: "$productDetails",
+        },
+        {
+            $project: {
+                revenue: {
+                    $multiply: ["$quantity", "$productDetails.price"],
+                },
+            },
+        },
+        {
+            $group: {
+                _id: null,
+                totalRevenue: { $sum: "$revenue" },
+            },
+        },
+        {
+            $project: {
+                _id: 0,
+                totalRevenue: 1,
+            },
+        },
+    ]);
+
+    return result;
+};
+
 export const OrderServices = {
     orderProductIntoDB,
+    generateOrdersRevenueFromDB,
 };

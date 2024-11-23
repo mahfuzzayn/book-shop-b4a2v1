@@ -4,7 +4,7 @@ import { OrderServices } from "./order.service";
 const orderProduct = async (req: Request, res: Response) => {
     try {
         const { order } = req.body;
-        
+
         const result = await OrderServices.orderProductIntoDB(order);
 
         res.status(200).json({
@@ -25,6 +25,29 @@ const orderProduct = async (req: Request, res: Response) => {
     }
 };
 
+const generateRevenueOfOrders = async (req: Request, res: Response) => {
+    const result = await OrderServices.generateOrdersRevenueFromDB();
+
+    res.status(200).json({
+        message: "Order created successfully",
+        status: true,
+        data: result,
+    });
+    try {
+    } catch (error: any) {
+        res.status(500).json({
+            message: "Failed to calculate revenue",
+            status: false,
+            error: {
+                name: error.name,
+                errors: error.errors,
+                stack: error.stack,
+            },
+        });
+    }
+};
+
 export const orderControllers = {
     orderProduct,
+    generateRevenueOfOrders,
 };

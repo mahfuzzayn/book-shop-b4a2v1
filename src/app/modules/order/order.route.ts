@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.post('/', orderControllers.orderProduct);
 
-// router.get('/revenue', productControllers.getSingleProduct);
+router.get('/revenue', orderControllers.generateRevenueOfOrders);
 
 export const OrderRoutes = router;

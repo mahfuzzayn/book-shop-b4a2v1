@@ -8,7 +8,7 @@ Welcome to the **Book Shop API**! This is a backend application designed for man
 ### 1. **Product (Book) Management**
    - **Create Books**: Add new books with details like title, author, price, category, description, quantity & inStock.
    - **Update Books**: Modify book details like price, stock quantity, and description.
-   - **View All Books**: Retrieve a list of all books in the shop. Books can be seached or filtered through title, author & category wise.
+   - **View All Books**: Retrieve a list of all books in the shop. Books can be searched or filtered through title, author & category wise.
    - **Get Single Book**: Get information of a specific book by its ID.
    - **Delete Books**: Remove a book that is no longer available for sale.
 
@@ -62,13 +62,13 @@ Make sure you have the following installed:
 
    ```env
    NODE_ENV=development
-   DATABASE_URL=mongodb://localhost:27017/book-shop-b4a2v1
+   DATABASE_URL=mongodb://localhost:27017/book-shop-b4a2v1 (must be modified) 
    PORT=5000
    ```
 
 4. Start the server:
    ```bash
-   npm run start
+   npm run start:dev
    ```
 
    The API will now be running on [http://localhost:5000](http://localhost:5000).

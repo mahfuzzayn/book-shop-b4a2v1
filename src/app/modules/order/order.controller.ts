@@ -1,53 +1,53 @@
-import { Request, Response } from "express";
-import { OrderServices } from "./order.service";
+import { Request, Response } from 'express'
+import { OrderServices } from './order.service'
 
 const orderProduct = async (req: Request, res: Response) => {
     try {
-        const orderData = req.body;
+        const orderData = req.body
 
-        const result = await OrderServices.orderProductIntoDB(orderData);
+        const result = await OrderServices.orderProductIntoDB(orderData)
 
         res.status(200).json({
-            message: "Order created successfully",
+            message: 'Order created successfully',
             status: true,
             data: result,
-        });
+        })
     } catch (error: any) {
         res.status(404).json({
-            message: "Failed to create an order",
+            message: 'Failed to create an order',
             success: false,
             error: {
                 name: error.name,
                 errors: error.errors,
                 stack: error.stack,
             },
-        });
+        })
     }
-};
+}
 
 const generateRevenueOfOrders = async (req: Request, res: Response) => {
-    const result = await OrderServices.generateOrdersRevenueFromDB();
+    const result = await OrderServices.generateOrdersRevenueFromDB()
 
     res.status(200).json({
-        message: "Revenue calculated successfully",
+        message: 'Revenue calculated successfully',
         status: true,
         data: result,
-    });
+    })
     try {
     } catch (error: any) {
         res.status(500).json({
-            message: "Failed to calculate revenue",
+            message: 'Failed to calculate revenue',
             status: false,
             error: {
                 name: error.name,
                 errors: error.errors,
                 stack: error.stack,
             },
-        });
+        })
     }
-};
+}
 
 export const orderControllers = {
     orderProduct,
     generateRevenueOfOrders,
-};
+}

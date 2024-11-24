@@ -15,7 +15,7 @@ const createProduct = async (req: Request, res: Response) => {
     } catch (error: any) {
         // console.log(error);
         res.status(500).json({
-            message: "Failed to create a product",
+            message: "Failed to create a book",
             success: false,
             error: {
                 name: error.name,
@@ -62,8 +62,8 @@ const getSingleProduct = async (req: Request, res: Response) => {
             data: result,
         });
     } catch (error: any) {
-        res.status(500).json({
-            message: "Failed to retrieve the book",
+        res.status(404).json({
+            message: error.message,
             success: false,
             error: {
                 name: error.name,

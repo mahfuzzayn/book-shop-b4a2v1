@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
 import { ProductServices } from './product.service'
 
@@ -13,7 +14,6 @@ const createProduct = async (req: Request, res: Response) => {
             data: result,
         })
     } catch (error: any) {
-        // console.log(error);
         res.status(500).json({
             message: 'Failed to create a book',
             success: false,

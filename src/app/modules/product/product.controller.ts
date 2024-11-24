@@ -3,7 +3,7 @@ import { ProductServices } from "./product.service";
 
 const createProduct = async (req: Request, res: Response) => {
     try {
-        const { product: productData } = req.body;
+        const productData = req.body;
 
         const result = await ProductServices.createProductIntoDB(productData);
 
@@ -77,7 +77,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
 const updateProduct = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params;
-        const { product: updatedProduct } = req.body;
+        const updatedProduct = req.body;
 
         const result = await ProductServices.updateProductFromDB(
             productId,

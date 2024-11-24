@@ -66,13 +66,19 @@ const updateProductFromDB = async (
     }
 
     for (const key in updatedProduct) {
-        if (updatedProduct[key as keyof Partial<TProduct>] === product[key as keyof TProduct]) {
+        if (
+            updatedProduct[key as keyof Partial<TProduct>] ===
+            product[key as keyof TProduct]
+        ) {
             isChangeValid = false;
         }
     }
 
     if (!isChangeValid) {
-        return { message: "No modifications detected; the product remains unchanged." };
+        return {
+            message:
+                "No modifications detected; the product remains unchanged.",
+        };
     }
 
     const result = await Product.updateOne(
@@ -114,6 +120,14 @@ const updateProductAfterOrderFromDB = async (
 };
 
 const deleteProductFromDB = async (id: string) => {
+    const existingProduct = await Product.findById(id);
+
+    if (!existingProduct) {
+        throw new Error(
+            "Failed to delete the book. The provided ID does not match any existing book."
+        );
+    }
+
     const result = await Product.deleteOne({ _id: id });
     return result;
 };

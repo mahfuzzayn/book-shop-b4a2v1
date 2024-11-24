@@ -5,7 +5,7 @@ import { Order } from './order.model'
 const orderProductIntoDB = async (orderData: TOrder) => {
     const { product: productId, quantity, totalPrice } = orderData
 
-    const productInDB = await ProductServices.getSingleProductFromDB(productId)
+    const productInDB = await ProductServices.getOrderProductFromDB(productId)
 
     if (!productInDB) {
         throw new Error('Product not found')

@@ -11,9 +11,14 @@ const createProductIntoDB = async (productData: TProduct) => {
     return result
 }
 
-const getAllProductsFromDB = async (searchTerm: any) => {
+const getAllProductsFromDB = async (searchTerm: string) => {
     if (!searchTerm) {
         const result = await Product.find()
+
+        if (result.length === 0) {
+            throw new Error('No books were found')
+        }
+
         return result
     } else {
         const result = await Product.find({
@@ -38,6 +43,11 @@ const getAllProductsFromDB = async (searchTerm: any) => {
                 },
             ],
         })
+
+        if (result.length === 0) {
+            throw new Error('No books were found with this search term')
+        }
+
         return result
     }
 }
@@ -53,7 +63,27 @@ const getSingleProductFromDB = async (id: string) => {
 
     if (!result) {
         const error = new Error(
-            'Failed to retrieve the book. The provided ID does not match any existing book.',
+            'Failed to retrieve the book. The provided ID does not match any existing book',
+        )
+        error.name = 'SearchError'
+        throw error
+    }
+
+    return result
+}
+
+const getOrderProductFromDB = async (id: string) => {
+    if (!validateObjectId(id)) {
+        const error = new Error('The Product ID is invalid')
+        error.name = 'Invalid ProductID'
+        throw error
+    }
+
+    const result = await Product.findById(id)
+
+    if (!result) {
+        const error = new Error(
+            'Failed to retrieve the product. The provided ID does not match any existing product',
         )
         error.name = 'SearchError'
         throw error
@@ -77,7 +107,7 @@ const updateProductFromDB = async (
     const product = await Product.findById(id)
 
     if (!product) {
-        throw new Error('No product found with the provided ID.')
+        throw new Error('No book found with the provided ID.')
     }
 
     for (const key in updatedProduct) {
@@ -90,10 +120,7 @@ const updateProductFromDB = async (
     }
 
     if (!isChangeValid) {
-        return {
-            message:
-                'No modifications detected; the product remains unchanged.',
-        }
+        throw new Error('No updates detected, the book remains unchanged.')
     }
 
     const result = await Product.updateOne(
@@ -135,6 +162,12 @@ const updateProductAfterOrderFromDB = async (
 }
 
 const deleteProductFromDB = async (id: string) => {
+    if (!validateObjectId(id)) {
+        const error = new Error('The provided ID is invalid')
+        error.name = 'InvalidID'
+        throw error
+    }
+
     const existingProduct = await Product.findById(id)
 
     if (!existingProduct) {
@@ -151,6 +184,7 @@ export const ProductServices = {
     createProductIntoDB,
     getAllProductsFromDB,
     getSingleProductFromDB,
+    getOrderProductFromDB,
     updateProductFromDB,
     updateProductAfterOrderFromDB,
     deleteProductFromDB,

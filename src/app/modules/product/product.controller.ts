@@ -15,7 +15,7 @@ const createProduct = async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         res.status(500).json({
-            message: 'Failed to create a book',
+            message: error.message,
             success: false,
             error: {
                 name: error.name,
@@ -30,7 +30,9 @@ const getAllProducts = async (req: Request, res: Response) => {
     try {
         const { searchTerm } = req.query
 
-        const result = await ProductServices.getAllProductsFromDB(searchTerm)
+        const result = await ProductServices.getAllProductsFromDB(
+            searchTerm as string,
+        )
 
         res.status(200).json({
             message: 'Books retrieved successfully',
@@ -39,7 +41,7 @@ const getAllProducts = async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         res.status(500).json({
-            message: 'Failed to retrieve all books',
+            message: error.message,
             success: false,
             error: {
                 name: error.name,
@@ -91,7 +93,7 @@ const updateProduct = async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         res.status(500).json({
-            message: 'Failed to update the book',
+            message: error.message,
             success: false,
             error: {
                 name: error.name,
@@ -115,7 +117,7 @@ const deleteProduct = async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         res.status(500).json({
-            message: 'Failed to delete the book',
+            message: error.message,
             success: false,
             error: {
                 name: error.name,

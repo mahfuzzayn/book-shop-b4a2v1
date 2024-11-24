@@ -1,4 +1,3 @@
-import { Product } from "../product/product.model";
 import { ProductServices } from "../product/product.service";
 import { TOrder } from "./order.interface";
 import { Order } from "./order.model";
@@ -15,7 +14,7 @@ const orderProductIntoDB = async (orderData: TOrder) => {
     if (productInDB.quantity < quantity) {
         throw new Error("Insufficient stock available");
     }
-    
+
     if (totalPrice > productInDB.price * quantity) {
         throw new Error(
             "The total price provided exceeds the calculated price for this order"
@@ -80,7 +79,7 @@ const generateOrdersRevenueFromDB = async () => {
         },
     ]);
 
-    return result;
+    return result.length > 0 ? result[0] : { totalRevenue: 0 };
 };
 
 export const OrderServices = {

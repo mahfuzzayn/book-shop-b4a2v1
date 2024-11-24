@@ -3,9 +3,9 @@ import { OrderServices } from "./order.service";
 
 const orderProduct = async (req: Request, res: Response) => {
     try {
-        const { order } = req.body;
+        const orderData = req.body;
 
-        const result = await OrderServices.orderProductIntoDB(order);
+        const result = await OrderServices.orderProductIntoDB(orderData);
 
         res.status(200).json({
             message: "Order created successfully",
@@ -13,7 +13,7 @@ const orderProduct = async (req: Request, res: Response) => {
             data: result,
         });
     } catch (error: any) {
-        res.status(500).json({
+        res.status(404).json({
             message: "Failed to create an order",
             success: false,
             error: {
@@ -29,7 +29,7 @@ const generateRevenueOfOrders = async (req: Request, res: Response) => {
     const result = await OrderServices.generateOrdersRevenueFromDB();
 
     res.status(200).json({
-        message: "Order created successfully",
+        message: "Revenue calculated successfully",
         status: true,
         data: result,
     });
